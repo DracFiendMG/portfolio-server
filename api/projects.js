@@ -1,28 +1,10 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const connectToCollection = require('../db');
 
-const username = process.env.MONGO_USERNAME;
-const password = process.env.MONGO_PASSWORD;
-const cluster = process.env.MONGO_CLUSTER;
-const appName = process.env.MONGO_DB;
-
-const uri = `mongodb+srv://${username}:${password}@${cluster}/?retryWrites=true&w=majority&appName=${appName}`;
-const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    },
-});
-
-const dbName = 'portfolio';
 const collectionName = 'projects';
 
 async function getProjects(req, res) {
     try {
-        await client.connect(); // Ensure the database connection
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
-
+        const collection = await connectToCollection(collectionName);
         const projects = await collection.find({}).toArray();
 
         res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all domains to access this API
