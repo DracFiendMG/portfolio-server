@@ -4,14 +4,8 @@ const collectionName = 'content';
 
 async function getContent(req, res) {
     try {
-
-        const { name } = req.query;
-        if (!name) {
-            return res.status(400).json({ error: "Query parameter 'name' is required" });
-        }
-
         const collection = await connectToCollection(collectionName);
-        const content = await collection.find({ name: name }).toArray();
+        const content = await collection.find({}).toArray();
 
         if (!content) {
             return res.status(404).json({ error: "Content not found" });
